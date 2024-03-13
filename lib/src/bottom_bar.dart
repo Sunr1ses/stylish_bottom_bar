@@ -62,9 +62,11 @@ class StylishBottomBar extends StatefulWidget {
     this.backgroundColor,
     this.elevation = 8.0,
     this.currentIndex = 0,
+    this.unSelectedAll = false,
     this.onTap,
     this.borderRadius,
     this.fabLocation,
+    this.fabOffset = 12,
     this.hasNotch = false,
     required this.option,
     this.gradient,
@@ -102,6 +104,11 @@ class StylishBottomBar extends StatefulWidget {
   ///Used to change the selected item index
   /// Default is 0
   final int currentIndex;
+
+  /// un selected all
+  final bool unSelectedAll;
+
+  final double fabOffset;
 
   ///Add notch effect to floating action button
   ///
@@ -394,7 +401,7 @@ class _StylishBottomBarState extends State<StylishBottomBar>
           onTap: () {
             if (widget.onTap != null) widget.onTap!(i);
           },
-          selected: i == widget.currentIndex,
+          selected: i == widget.currentIndex && !widget.unSelectedAll,
           flex: _evaluateFlex(_animations[i]),
           indexLabel: localizations.tabLabel(
               tabIndex: i + 1, tabCount: widget.items.length),
@@ -431,7 +438,7 @@ class _StylishBottomBarState extends State<StylishBottomBar>
         padding: options.padding,
         inkEffect: options.inkEffect,
         inkColor: options.inkColor,
-        selected: widget.currentIndex == i,
+        selected: widget.currentIndex == i && !widget.unSelectedAll,
         opacity: options.opacity!,
         animation: _animations[i],
         barAnimation: options.barAnimation,
@@ -450,7 +457,7 @@ class _StylishBottomBarState extends State<StylishBottomBar>
         list.length > 3
             ? Flex(
                 direction: Axis.horizontal,
-                children: [Padding(padding: EdgeInsets.all(12))],
+                children: [Padding(padding: EdgeInsets.all(widget.fabOffset))],
               )
             : const Spacer(
                 flex: 2,
@@ -470,7 +477,7 @@ class _StylishBottomBarState extends State<StylishBottomBar>
     for (int i = 0; i < widget.items.length; ++i) {
       list.add(DotNavigationTiles(
         widget.items[i],
-        selected: widget.currentIndex == i,
+        selected: widget.currentIndex == i && !widget.unSelectedAll,
         animation: _animations[i],
         options: options,
         onTap: () {
@@ -485,9 +492,9 @@ class _StylishBottomBarState extends State<StylishBottomBar>
       list.insert(
         2,
         list.length > 3
-            ? const Flex(
+            ? Flex(
                 direction: Axis.horizontal,
-                children: [Padding(padding: EdgeInsets.all(12))],
+                children: [Padding(padding: EdgeInsets.all(widget.fabOffset))],
               )
             : const Spacer(
                 flex: 2,
